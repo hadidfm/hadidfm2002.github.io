@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+
+    <title>WEB UAS SIG KAB TANGERANG</title>
+    <!-- BOOTSTRAP SOURCE -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="anonymous" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- JSON DATA -->
+    <script src="data/leaflet.ajax.js"></script>
+    <script type="text/javascript"></script>
+
+    <!-- Styling HTML CSS -->
+    <style>
+        #header {
+            height: 75px;
+            background-color: rgba(56, 56, 52, 0.52);
+            border: 3px solid #000; 
+        }
+        
+        #side_panel {
+            height: 651px;
+            background-color: rgb(255, 255, 255);
+            border: 3px solid #000;
+        }
+        
+        #mapdiv {
+            height: 610px;
+            background-color: rgb(56, 56, 52, 0.52);
+            border: 3px solid #000;
+        }
+        
+        #footer {
+            height: 75px;
+            background-color: rgb(0, 255, 106);
+            border: 3px solid #000; 
+        }
+        
+        #mapdiv {
+        height: 79vh;
+        }
+    </style>
+
+    <body>
+</head>
+
+<div id="header" class="container-fluid text-center">
+    <h1 class="text-center">PETA KABUPATEN TANGERANG</h1>
+</div>
+
+<div class="container-flud">
+    <div class="row">
+        <div id="side_panel" class="col-md-3">
+            <h3 class="text-center">Kantor POS</h3>
+            <!-- Nomor 2.3 -->
+            <button id="ZoomToPusatKabupatenTangerang" class="from-control btn-primary">Kabupaten Tangerang</button>
+            <button id="ZoomToPusatKabupatenTangerang" class="from-control btn-primary">Kota Tangerang</button>
+        </div>
+        <div id="mapdiv" class="col-md-9"></div>
+    </div>
+
+</div>
+<div id="footer" class="col-md-12">
+    <h4 id="map_coord" class="d-flex align-items-center justify-content-center">Latitude: -6.260573411943668 Longitude: 106.46978750467133</h4>
+</div>
+<h4 class="text-center">Universitas Sultan Ageng Tirtayasa <a href="https://untirta.id"><img src="img/logo.png" alt="UNTIRTA" width="70" height="70"></a></h4>
+<h5 class="text-center">&copy;2023 </h4>
+
+</div>
+
+<!-- Nomor 2.1 dan 2.2 -->
+
+
+<script>
+    var mymap = L.map('mapdiv');
+ 
+    mymap.setView([-6.260573411943668, 106.46978750467133], 9);
+    var backgroundLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
+
+    mymap.addLayer(backgroundLayer);
+
+    var yellowIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+    });
+
+    var violetIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+    });
+
+    var mymarker = L.marker([-6.260573411943668, 106.46978750467133], { icon: yellowIcon });
+    mymarker.addTo(mymap);
+    mymarker.bindPopup("<h5 class='text-center'>Kab Tangerang</h5><hr><a href='https://id.wikipedia.org/wiki/Kabupaten_Tangerang' target='blank'><img src='img/Tanggerang.jpg' width='150px'></a>");
+
+    var geojsonArealayer = new L.GeoJSON.AJAX(["data/Desa.geojson"]).addTo(mymap);
+    var geojsonLinelayer = new L.GeoJSON.AJAX(["data/Line.geojson"]).addTo(mymap);
+    var geojsonPointlayer = new L.GeoJSON.AJAX(["data/KantorPOS.geojson"], {
+    pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, { icon: violetIcon });
+    }}).addTo(mymap);
+    var baseMaps = {
+        "Area": geojsonArealayer,
+        "Line": geojsonLinelayer,
+    }
+    var overLays = {
+        "Kantor POS": geojsonPointlayer,
+        
+        
+    }
+
+    L.control.layers(baseMaps, overLays,).addTo(mymap);
+    $("#ZoomToPusatKabupatenTanggerang").click(function() {
+        mymap.setView([-6.260573411943668, 106.46978750467133], 9);
+    })
+</script>
+</body>
+
+</html>
